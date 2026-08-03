@@ -1,12 +1,28 @@
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
 const sliderTicks = document.querySelectorAll(".slider-ticks span");
+const sizeSlider = document.getElementById("sizeSlider");
 const flipClock = document.getElementById("flipClock");
-const startBtn = document.getElementById("startBtn");
-const pauseBtn = document.getElementById("pauseBtn");
+const playPauseBtn = document.getElementById("playPauseBtn");
 const resetBtn = document.getElementById("resetBtn");
-const status = document.getElementById("status");
 const themeToggle = document.getElementById("themeToggle");
+const fontToggle = document.getElementById("fontToggle");
+const colorSwatches = document.querySelectorAll(".color-swatch");
+const paletteToggle = document.getElementById("paletteToggle");
+const colorDropdown = document.getElementById("colorDropdown");
+
+function applySize(percent) {
+  document.documentElement.style.setProperty("--size-scale", percent / 100);
+}
+
+const savedSize = localStorage.getItem("timer-size");
+if (savedSize) sizeSlider.value = savedSize;
+applySize(Number(sizeSlider.value));
+
+sizeSlider.addEventListener("input", () => {
+  applySize(Number(sizeSlider.value));
+  localStorage.setItem("timer-size", sizeSlider.value);
+});
 
 function createFlipDigit(el) {
   const topNum = el.querySelector(".flip-static.top .num");
@@ -141,6 +157,66 @@ themeToggle.addEventListener("click", () => {
   applyTheme(next);
 });
 
+function applyFont(font) {
+  document.documentElement.setAttribute("data-font", font);
+}
+
+const FONTS = ["orbitron", "bebas", "pixel"];
+const savedFont = localStorage.getItem("timer-font");
+applyFont(savedFont || FONTS[0]);
+
+fontToggle.addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-font");
+  const next = FONTS[(FONTS.indexOf(current) + 1) % FONTS.length];
+  localStorage.setItem("timer-font", next);
+  applyFont(next);
+});
+
+function applyAccent(accent) {
+  document.documentElement.setAttribute("data-accent", accent);
+  colorSwatches.forEach((swatch) => {
+    swatch.classList.toggle("active", swatch.dataset.accent === accent);
+  });
+}
+
+const savedAccent = localStorage.getItem("timer-accent");
+applyAccent(savedAccent || "indigo");
+
+colorSwatches.forEach((swatch) => {
+  swatch.addEventListener("click", () => {
+    const accent = swatch.dataset.accent;
+    localStorage.setItem("timer-accent", accent);
+    applyAccent(accent);
+
+    if (accent === "cyberpunk") {
+      localStorage.setItem("timer-theme", "dark");
+      applyTheme("dark");
+      localStorage.setItem("timer-font", "pixel");
+      applyFont("pixel");
+    }
+
+    colorDropdown.classList.remove("open");
+  });
+});
+
+paletteToggle.addEventListener("click", (event) => {
+  event.stopPropagation();
+  colorDropdown.classList.toggle("open");
+});
+
+document.addEventListener("click", (event) => {
+  if (!colorDropdown.contains(event.target) && event.target !== paletteToggle) {
+    colorDropdown.classList.remove("open");
+  }
+});
+
+function setPlayPauseIcon(running) {
+  playPauseBtn.classList.toggle("is-running", running);
+  const label = running ? "Pause" : "Start";
+  playPauseBtn.setAttribute("aria-label", label);
+  playPauseBtn.setAttribute("title", label);
+}
+
 function updateDisplay() {
   const m = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
   const s = Math.floor(remainingSeconds % 60).toString().padStart(2, "0");
@@ -160,10 +236,9 @@ function selectPreset(minutes) {
   sliderTicks.forEach((tick) => {
     tick.classList.toggle("active", Number(tick.dataset.minutes) === minutes);
   });
-  startBtn.disabled = false;
-  pauseBtn.disabled = true;
+  playPauseBtn.disabled = false;
+  setPlayPauseIcon(false);
   resetBtn.disabled = false;
-  status.textContent = `${minutes} minute${minutes === 1 ? "" : "s"} ready`;
 }
 
 function tick() {
@@ -180,19 +255,23 @@ function startTimer() {
   if (remainingSeconds <= 0) return;
   endTime = Date.now() + remainingSeconds * 1000;
   intervalId = setInterval(tick, 1000);
-  startBtn.disabled = true;
-  pauseBtn.disabled = false;
+  setPlayPauseIcon(true);
   durationSlider.disabled = true;
-  status.textContent = "Running…";
 }
 
 function pauseTimer() {
   clearInterval(intervalId);
   intervalId = null;
-  startBtn.disabled = false;
-  pauseBtn.disabled = true;
+  setPlayPauseIcon(false);
   durationSlider.disabled = false;
-  status.textContent = "Paused";
+}
+
+function togglePlayPause() {
+  if (intervalId) {
+    pauseTimer();
+  } else {
+    startTimer();
+  }
 }
 
 function resetTimer() {
@@ -201,10 +280,9 @@ function resetTimer() {
   remainingSeconds = totalSeconds;
   endTime = null;
   updateDisplay();
-  startBtn.disabled = totalSeconds === 0;
-  pauseBtn.disabled = true;
+  playPauseBtn.disabled = totalSeconds === 0;
+  setPlayPauseIcon(false);
   durationSlider.disabled = false;
-  status.textContent = totalSeconds ? "Reset" : "Pick a duration to begin";
 }
 
 function playAlertSound() {
@@ -225,10 +303,9 @@ function playAlertSound() {
 }
 
 function onTimerComplete() {
-  startBtn.disabled = true;
-  pauseBtn.disabled = true;
+  playPauseBtn.disabled = true;
+  setPlayPauseIcon(false);
   durationSlider.disabled = false;
-  status.textContent = "Time's up!";
 
   playAlertSound();
   launchConfetti();
@@ -249,6 +326,5 @@ durationSlider.addEventListener("input", () => {
 });
 selectPreset(PRESETS[Number(durationSlider.value)]);
 
-startBtn.addEventListener("click", startTimer);
-pauseBtn.addEventListener("click", pauseTimer);
+playPauseBtn.addEventListener("click", togglePlayPause);
 resetBtn.addEventListener("click", resetTimer);
