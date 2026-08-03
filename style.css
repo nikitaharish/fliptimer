@@ -210,12 +210,16 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  width: clamp(4px, 0.6vw, 8px);
-  height: clamp(4px, 0.6vw, 8px);
-  background: #050505;
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  border-radius: 50%;
+  width: clamp(5px, 0.7vw, 9px);
+  height: clamp(11px, 1.8vw, 18px);
+  background: transparent;
+  border-radius: 2px;
   transform: translate(-50%, -50%);
+  box-shadow:
+    calc(-1 * var(--flip-w) / 2) 0 0 0 #050505,
+    calc(-1 * var(--flip-w) / 2) 0 0 1px rgba(255, 255, 255, 0.3),
+    calc(var(--flip-w) / 2) 0 0 0 #050505,
+    calc(var(--flip-w) / 2) 0 0 1px rgba(255, 255, 255, 0.3);
   z-index: 11;
   pointer-events: none;
 }
