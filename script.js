@@ -457,6 +457,8 @@ function onTimerComplete() {
 
   document.title = "⏰ Time's up! — Timer";
   window.addEventListener("focus", () => (document.title = "Timer"), { once: true });
+
+  setTimeout(resetTimer, 2500);
 }
 
 durationSlider.addEventListener("input", () => {
