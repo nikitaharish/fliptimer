@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Timer</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+
+  <div class="page">
+    <div class="flip-clock" id="flipClock">
+      <div class="flip-digit" data-role="mTens">
+        <div class="flip-static top"><span class="num">0</span></div>
+        <div class="flip-static bottom"><span class="num">0</span></div>
+        <div class="flip-leaf front"><span class="num">0</span></div>
+        <div class="flip-leaf back"><span class="num">0</span></div>
+      </div>
+      <div class="flip-digit" data-role="mOnes">
+        <div class="flip-static top"><span class="num">0</span></div>
+        <div class="flip-static bottom"><span class="num">0</span></div>
+        <div class="flip-leaf front"><span class="num">0</span></div>
+        <div class="flip-leaf back"><span class="num">0</span></div>
+      </div>
+      <div class="flip-sep">:</div>
+      <div class="flip-digit" data-role="sTens">
+        <div class="flip-static top"><span class="num">0</span></div>
+        <div class="flip-static bottom"><span class="num">0</span></div>
+        <div class="flip-leaf front"><span class="num">0</span></div>
+        <div class="flip-leaf back"><span class="num">0</span></div>
+      </div>
+      <div class="flip-digit" data-role="sOnes">
+        <div class="flip-static top"><span class="num">0</span></div>
+        <div class="flip-static bottom"><span class="num">0</span></div>
+        <div class="flip-leaf front"><span class="num">0</span></div>
+        <div class="flip-leaf back"><span class="num">0</span></div>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button id="startBtn" class="icon-btn" disabled aria-label="Start" title="Start">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </button>
+      <button id="pauseBtn" class="icon-btn" disabled aria-label="Pause" title="Pause">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      </button>
+      <button id="resetBtn" class="icon-btn" disabled aria-label="Reset" title="Reset">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v5h5"/></svg>
+      </button>
+    </div>
+
+    <div class="duration-slider">
+      <input type="range" id="durationSlider" min="0" max="4" step="1" value="2" aria-label="Timer duration">
+      <div class="slider-ticks">
+        <span data-minutes="1" style="left: calc(11px + (100% - 22px) * 0)">1</span>
+        <span data-minutes="5" style="left: calc(11px + (100% - 22px) * 0.25)">5</span>
+        <span data-minutes="10" style="left: calc(11px + (100% - 22px) * 0.5)">10</span>
+        <span data-minutes="25" style="left: calc(11px + (100% - 22px) * 0.75)">25</span>
+        <span data-minutes="30" style="left: calc(11px + (100% - 22px) * 1)">30</span>
+      </div>
+    </div>
+
+    <p class="status" id="status">Pick a duration to begin</p>
+  </div>
+
+  <canvas id="confettiCanvas"></canvas>
+
+  <script src="script.js"></script>
+</body>
+</html>

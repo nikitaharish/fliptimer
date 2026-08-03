@@ -1,0 +1,326 @@
+:root {
+  color-scheme: light dark;
+  --bg: #f4f4f5;
+  --text: #18181b;
+  --status-text: #71717a;
+  --accent: #6366f1;
+  --flip-bg: #eaeaec;
+  --flip-text: #18181b;
+  --flip-divider: rgba(0, 0, 0, 0.14);
+  --flip-shadow: rgba(0, 0, 0, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #18181b;
+    --text: #f4f4f5;
+    --status-text: #a1a1aa;
+    --flip-bg: #1c1c1e;
+    --flip-text: #c7c7cc;
+    --flip-divider: rgba(0, 0, 0, 0.55);
+    --flip-shadow: rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme="light"] {
+  --bg: #f4f4f5;
+  --text: #18181b;
+  --status-text: #71717a;
+  --flip-bg: #eaeaec;
+  --flip-text: #18181b;
+  --flip-divider: rgba(0, 0, 0, 0.14);
+  --flip-shadow: rgba(0, 0, 0, 0.18);
+}
+
+:root[data-theme="dark"] {
+  --bg: #18181b;
+  --text: #f4f4f5;
+  --status-text: #a1a1aa;
+  --flip-bg: #1c1c1e;
+  --flip-text: #c7c7cc;
+  --flip-divider: rgba(0, 0, 0, 0.55);
+  --flip-shadow: rgba(0, 0, 0, 0.6);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  transition: background 0.2s;
+}
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 4vh, 3rem);
+  padding: 2rem 1rem;
+  text-align: center;
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 1.2rem;
+  right: 1.2rem;
+  border: none;
+  background: transparent;
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0.4rem;
+  border-radius: 8px;
+  z-index: 20;
+}
+
+.theme-toggle:hover {
+  background: color-mix(in srgb, var(--text) 10%, transparent);
+}
+
+.duration-slider {
+  width: min(90vw, 420px);
+}
+
+.duration-slider input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 6px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text) 15%, transparent);
+  outline: none;
+  cursor: pointer;
+}
+
+.duration-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.duration-slider input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 3px solid var(--bg);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.slider-ticks {
+  position: relative;
+  height: 1.2em;
+  margin-top: 0.6rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--status-text);
+}
+
+.slider-ticks span {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.slider-ticks span.active {
+  color: var(--accent);
+}
+
+.flip-clock {
+  --flip-h: clamp(4.5rem, min(48vh, 26vw), 32rem);
+  --flip-w: calc(var(--flip-h) * 0.62);
+  --flip-font: calc(var(--flip-h) * 0.72);
+  --flip-radius: calc(var(--flip-h) * 0.09);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: calc(var(--flip-h) * 0.06);
+}
+
+.flip-sep {
+  color: var(--text);
+  font-size: var(--flip-font);
+  font-weight: 800;
+  line-height: var(--flip-h);
+  margin: 0 clamp(0.1rem, 0.4vw, 0.5rem);
+}
+
+.flip-digit {
+  position: relative;
+  width: var(--flip-w);
+  height: var(--flip-h);
+  perspective: 300px;
+  border-radius: var(--flip-radius);
+  box-shadow: 0 6px 16px var(--flip-shadow);
+}
+
+.flip-static,
+.flip-leaf {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: calc(var(--flip-h) / 2);
+  overflow: hidden;
+  background: var(--flip-bg);
+}
+
+.flip-static .num,
+.flip-leaf .num {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: var(--flip-h);
+  line-height: var(--flip-h);
+  font-size: var(--flip-font);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+  color: var(--flip-text);
+}
+
+.flip-static.top,
+.flip-leaf.front {
+  top: 0;
+  border-radius: var(--flip-radius) var(--flip-radius) 0 0;
+}
+
+.flip-static.top .num,
+.flip-leaf.front .num {
+  top: 0;
+}
+
+.flip-static.bottom,
+.flip-leaf.back {
+  top: calc(var(--flip-h) / 2);
+  border-radius: 0 0 var(--flip-radius) var(--flip-radius);
+}
+
+.flip-static.bottom .num,
+.flip-leaf.back .num {
+  top: calc(var(--flip-h) / -2);
+}
+
+.flip-digit::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: clamp(2px, 0.25vw, 4px);
+  background: var(--flip-divider);
+  transform: translateY(-1px);
+  z-index: 10;
+  pointer-events: none;
+}
+
+.flip-leaf {
+  z-index: 5;
+  backface-visibility: hidden;
+}
+
+.flip-leaf.front {
+  transform-origin: bottom center;
+  transform: rotateX(0deg);
+}
+
+.flip-leaf.back {
+  transform-origin: top center;
+  transform: rotateX(90deg);
+}
+
+.flip-leaf.front.animate {
+  animation: foldFront 0.22s ease-in forwards;
+}
+
+.flip-leaf.back.animate {
+  animation: foldBack 0.22s ease-out forwards;
+  animation-delay: 0.22s;
+}
+
+@keyframes foldFront {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(-90deg);
+  }
+}
+
+@keyframes foldBack {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+
+#confettiCanvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50;
+}
+
+.controls {
+  display: flex;
+  gap: 0.9rem;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+
+.icon-btn svg {
+  width: 1.3rem;
+  height: 1.3rem;
+}
+
+.icon-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.icon-btn:not(:disabled):hover {
+  opacity: 0.85;
+}
+
+.icon-btn:not(:disabled):active {
+  transform: scale(0.93);
+}
+
+.status {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--status-text);
+  min-height: 1.2em;
+}
