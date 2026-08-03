@@ -133,6 +133,144 @@ function launchConfetti() {
   confettiAnimationId = requestAnimationFrame(frame);
 }
 
+function launchBalloons() {
+  const colors = ["#10b981", "#34d399", "#6ee7b7", "#059669", "#a7f3d0"];
+  const count = 14;
+  const particles = Array.from({ length: count }, (_, i) => ({
+    x: (confettiCanvas.width / (count + 1)) * (i + 1) + (Math.random() * 40 - 20),
+    y: confettiCanvas.height + 60 + Math.random() * 300,
+    size: 26 + Math.random() * 18,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    speedY: 1.2 + Math.random() * 1.1,
+    sway: Math.random() * Math.PI * 2,
+    swaySpeed: 0.02 + Math.random() * 0.02,
+    swayAmount: 15 + Math.random() * 15,
+  }));
+
+  const duration = 4500;
+  let elapsed = 0;
+  let lastTime = performance.now();
+
+  function frame(now) {
+    const dt = now - lastTime;
+    lastTime = now;
+    elapsed += dt;
+    confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+    particles.forEach((p) => {
+      p.y -= p.speedY * (dt / 16.67);
+      p.sway += p.swaySpeed * (dt / 16.67);
+      const x = p.x + Math.sin(p.sway) * p.swayAmount;
+
+      confettiCtx.strokeStyle = "rgba(0, 0, 0, 0.25)";
+      confettiCtx.lineWidth = 1.5;
+      confettiCtx.beginPath();
+      confettiCtx.moveTo(x, p.y + p.size * 0.9);
+      confettiCtx.lineTo(x, p.y + p.size * 0.9 + 30);
+      confettiCtx.stroke();
+
+      confettiCtx.fillStyle = p.color;
+      confettiCtx.beginPath();
+      confettiCtx.ellipse(x, p.y, p.size * 0.72, p.size, 0, 0, Math.PI * 2);
+      confettiCtx.fill();
+
+      confettiCtx.beginPath();
+      confettiCtx.moveTo(x - 4, p.y + p.size * 0.85);
+      confettiCtx.lineTo(x + 4, p.y + p.size * 0.85);
+      confettiCtx.lineTo(x, p.y + p.size * 0.95);
+      confettiCtx.closePath();
+      confettiCtx.fill();
+
+      confettiCtx.fillStyle = "rgba(255, 255, 255, 0.35)";
+      confettiCtx.beginPath();
+      confettiCtx.ellipse(x - p.size * 0.25, p.y - p.size * 0.35, p.size * 0.18, p.size * 0.28, -0.4, 0, Math.PI * 2);
+      confettiCtx.fill();
+    });
+
+    if (elapsed < duration && particles.some((p) => p.y > -120)) {
+      confettiAnimationId = requestAnimationFrame(frame);
+    } else {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiAnimationId = null;
+    }
+  }
+
+  if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+  confettiAnimationId = requestAnimationFrame(frame);
+}
+
+function launchSparkles() {
+  const colors = ["#f59e0b", "#fcd34d", "#fde68a", "#ffffff"];
+  const count = 90;
+  const particles = Array.from({ length: count }, () => ({
+    x: Math.random() * confettiCanvas.width,
+    y: Math.random() * confettiCanvas.height,
+    size: 4 + Math.random() * 6,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    delay: Math.random() * 1400,
+    life: 600 + Math.random() * 500,
+  }));
+
+  const duration = 3200;
+  let elapsed = 0;
+  let lastTime = performance.now();
+
+  function drawSparkle(cx, cy, r, color, alpha) {
+    confettiCtx.save();
+    confettiCtx.globalAlpha = alpha;
+    confettiCtx.strokeStyle = color;
+    confettiCtx.lineWidth = 1.4;
+    confettiCtx.beginPath();
+    confettiCtx.moveTo(cx, cy - r);
+    confettiCtx.lineTo(cx, cy + r);
+    confettiCtx.moveTo(cx - r, cy);
+    confettiCtx.lineTo(cx + r, cy);
+    confettiCtx.moveTo(cx - r * 0.6, cy - r * 0.6);
+    confettiCtx.lineTo(cx + r * 0.6, cy + r * 0.6);
+    confettiCtx.moveTo(cx - r * 0.6, cy + r * 0.6);
+    confettiCtx.lineTo(cx + r * 0.6, cy - r * 0.6);
+    confettiCtx.stroke();
+    confettiCtx.restore();
+  }
+
+  function frame(now) {
+    const dt = now - lastTime;
+    lastTime = now;
+    elapsed += dt;
+    confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+    particles.forEach((p) => {
+      if (elapsed < p.delay) return;
+      const t = elapsed - p.delay;
+      if (t > p.life) return;
+      const progress = t / p.life;
+      const alpha = progress < 0.5 ? progress * 2 : (1 - progress) * 2;
+      drawSparkle(p.x, p.y, p.size * (0.6 + 0.4 * Math.sin(progress * Math.PI)), p.color, Math.max(0, alpha));
+    });
+
+    if (elapsed < duration) {
+      confettiAnimationId = requestAnimationFrame(frame);
+    } else {
+      confettiCtx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+      confettiAnimationId = null;
+    }
+  }
+
+  if (confettiAnimationId) cancelAnimationFrame(confettiAnimationId);
+  confettiAnimationId = requestAnimationFrame(frame);
+}
+
+function launchCompletionEffect() {
+  const accent = document.documentElement.getAttribute("data-accent");
+  if (accent === "emerald") {
+    launchBalloons();
+  } else if (accent === "amber") {
+    launchSparkles();
+  } else {
+    launchConfetti();
+  }
+}
+
 let totalSeconds = 0;
 let remainingSeconds = 0;
 let endTime = null;
@@ -308,7 +446,7 @@ function onTimerComplete() {
   durationSlider.disabled = false;
 
   playAlertSound();
-  launchConfetti();
+  launchCompletionEffect();
 
   if ("Notification" in window && Notification.permission === "granted") {
     new Notification("Timer complete", {
