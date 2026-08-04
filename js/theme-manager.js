@@ -35,13 +35,14 @@ export class ThemeManager {
     this.#storage?.setItem(STORAGE_KEY, theme);
   }
 
-  // Restores a previously-persisted theme, falling back to the OS-level
-  // light/dark preference, then to `fallback`. Returns the theme that was
-  // applied. Call once during startup.
+  // Restores a previously-persisted theme, falling back to `fallback` (the
+  // app's default theme) if none was stored yet. Returns the theme that
+  // was applied. Call once during startup. Deliberately has no notion of
+  // OS light/dark preference - the app has one production default theme,
+  // not a light/dark binary, so there's nothing to auto-detect.
   init(fallback) {
     const stored = this.#storage?.getItem(STORAGE_KEY);
-    const systemPrefersDark = window.matchMedia?.("(prefers-color-scheme: dark)").matches;
-    const initial = stored || (systemPrefersDark ? "dark" : "light") || fallback;
+    const initial = stored || fallback;
     this.apply(initial);
     return initial;
   }

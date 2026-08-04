@@ -61,6 +61,31 @@
   --card-shadow: rgba(0, 0, 0, 0.6);
 }
 
+/* Minimal Black - the default production theme. Pure black page, soft
+   gray card surfaces (one flat step up from the background, no gradient
+   bevel), white typography throughout, and a faint white-tinted shadow
+   for lift - a literal black drop-shadow would be invisible against a
+   pure black page, so the shadow leans light instead of dark. No
+   --glow-color or --card-border is set here, so both stay at the base
+   :root defaults (transparent) - there is no glass/neon effect to opt
+   into. */
+:root[data-theme="minimal-black"] {
+  --bg-primary: #000000;
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --accent: #f4f4f5;
+  --card-bg: #1c1c1e;
+  --card-text: #ffffff;
+  --divider: rgba(0, 0, 0, 0.55);
+  --card-shadow: rgba(255, 255, 255, 0.06);
+}
+
+/* The accent is a near-white here, so the icon-btn's default white icon
+   (see .icon-btn below) needs to flip to dark to stay legible on it. */
+:root[data-theme="minimal-black"] .icon-btn {
+  color: #000000;
+}
+
 :root[data-font="orbitron"] {
   --app-font: "Orbitron";
 }

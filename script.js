@@ -1,6 +1,6 @@
 import { FlipDigit } from "./js/flip-digit.js?v=2";
 import { TimerController } from "./js/timer-controller.js?v=1";
-import { ThemeManager } from "./js/theme-manager.js?v=1";
+import { ThemeManager } from "./js/theme-manager.js?v=2";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
@@ -246,7 +246,7 @@ function updateThemeToggleIcon() {
   themeToggle.textContent = themeManager.activeTheme === "dark" ? "☀️" : "🌙";
 }
 
-themeManager.init("light");
+themeManager.init("minimal-black");
 updateThemeToggleIcon();
 
 themeToggle.addEventListener("click", () => {
