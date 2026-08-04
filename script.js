@@ -1,4 +1,4 @@
-import { FlipDigit } from "./js/flip-digit.js?v=1";
+import { FlipDigit } from "./js/flip-digit.js?v=2";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
