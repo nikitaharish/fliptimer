@@ -258,11 +258,23 @@ themeToggle.addEventListener("click", () => {
   updateThemeToggleIcon();
 });
 
+// cyberpunk and mono are "forcing" accents: their CSS overrides bg/card
+// colors regardless of data-theme, so they'd otherwise make a theme picked
+// here look like nothing happened. Clear back to a neutral accent so the
+// picked theme actually takes visual effect.
+const FORCING_ACCENTS = ["cyberpunk", "mono"];
+
 createThemePicker({
   toggleEl: themePickerToggle,
   popoverEl: themePickerPopover,
   themeManager,
-  onApply: updateThemeToggleIcon,
+  onApply: () => {
+    updateThemeToggleIcon();
+    if (FORCING_ACCENTS.includes(document.documentElement.getAttribute("data-accent"))) {
+      localStorage.setItem("timer-accent", "indigo");
+      applyAccent("indigo");
+    }
+  },
 });
 
 function applyFont(font) {
