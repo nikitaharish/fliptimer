@@ -1,3 +1,5 @@
+import { FlipDigit } from "./js/flip-digit.js?v=1";
+
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
 const sliderTicks = document.querySelectorAll(".slider-ticks span");
@@ -24,55 +26,11 @@ sizeSlider.addEventListener("input", () => {
   localStorage.setItem("timer-size", sizeSlider.value);
 });
 
-function createFlipDigit(el) {
-  const topNum = el.querySelector(".flip-static.top .num");
-  const bottomNum = el.querySelector(".flip-static.bottom .num");
-  const frontLeaf = el.querySelector(".flip-leaf.front");
-  const backLeaf = el.querySelector(".flip-leaf.back");
-  const frontNum = frontLeaf.querySelector(".num");
-  const backNum = backLeaf.querySelector(".num");
-
-  let current = "0";
-  let backTimeoutId = null;
-
-  function set(value) {
-    if (value === current) return;
-    const previous = current;
-    current = value;
-
-    clearTimeout(backTimeoutId);
-    frontLeaf.classList.remove("animate");
-    backLeaf.classList.remove("animate");
-    frontLeaf.style.transition = "none";
-    backLeaf.style.transition = "none";
-    frontLeaf.style.transform = "rotateX(0deg)";
-    backLeaf.style.transform = "rotateX(90deg)";
-    frontNum.textContent = previous;
-    backNum.textContent = value;
-    topNum.textContent = value;
-
-    void el.offsetWidth;
-
-    frontLeaf.style.transition = "";
-    backLeaf.style.transition = "";
-    frontLeaf.style.transform = "";
-    backLeaf.style.transform = "";
-    frontLeaf.classList.add("animate");
-    backLeaf.classList.add("animate");
-
-    backTimeoutId = setTimeout(() => {
-      bottomNum.textContent = value;
-    }, 220);
-  }
-
-  return { set };
-}
-
 const flipDigits = {
-  mTens: createFlipDigit(flipClock.querySelector('[data-role="mTens"]')),
-  mOnes: createFlipDigit(flipClock.querySelector('[data-role="mOnes"]')),
-  sTens: createFlipDigit(flipClock.querySelector('[data-role="sTens"]')),
-  sOnes: createFlipDigit(flipClock.querySelector('[data-role="sOnes"]')),
+  mTens: new FlipDigit(flipClock.querySelector('[data-role="mTens"]')),
+  mOnes: new FlipDigit(flipClock.querySelector('[data-role="mOnes"]')),
+  sTens: new FlipDigit(flipClock.querySelector('[data-role="sTens"]')),
+  sOnes: new FlipDigit(flipClock.querySelector('[data-role="sOnes"]')),
 };
 
 const confettiCanvas = document.getElementById("confettiCanvas");
@@ -358,10 +316,10 @@ function setPlayPauseIcon(running) {
 function updateDisplay() {
   const m = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
   const s = Math.floor(remainingSeconds % 60).toString().padStart(2, "0");
-  flipDigits.mTens.set(m[0]);
-  flipDigits.mOnes.set(m[1]);
-  flipDigits.sTens.set(s[0]);
-  flipDigits.sOnes.set(s[1]);
+  flipDigits.mTens.flipTo(m[0]);
+  flipDigits.mOnes.flipTo(m[1]);
+  flipDigits.sTens.flipTo(s[0]);
+  flipDigits.sOnes.flipTo(s[1]);
 }
 
 function selectPreset(minutes) {
