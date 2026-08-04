@@ -1,5 +1,6 @@
 import { FlipDigit } from "./js/flip-digit.js?v=2";
 import { TimerController } from "./js/timer-controller.js?v=1";
+import { ThemeManager } from "./js/theme-manager.js?v=1";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
@@ -239,19 +240,19 @@ if ("Notification" in window && Notification.permission === "default") {
   Notification.requestPermission();
 }
 
-function applyTheme(theme) {
-  document.documentElement.setAttribute("data-theme", theme);
-  themeToggle.textContent = theme === "dark" ? "☀️" : "🌙";
+const themeManager = new ThemeManager();
+
+function updateThemeToggleIcon() {
+  themeToggle.textContent = themeManager.activeTheme === "dark" ? "☀️" : "🌙";
 }
 
-const savedTheme = localStorage.getItem("timer-theme");
-const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-applyTheme(savedTheme || systemTheme);
+themeManager.init("light");
+updateThemeToggleIcon();
 
 themeToggle.addEventListener("click", () => {
-  const next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
-  localStorage.setItem("timer-theme", next);
-  applyTheme(next);
+  const next = themeManager.activeTheme === "dark" ? "light" : "dark";
+  themeManager.apply(next);
+  updateThemeToggleIcon();
 });
 
 function applyFont(font) {
@@ -286,8 +287,8 @@ colorSwatches.forEach((swatch) => {
     applyAccent(accent);
 
     if (accent === "cyberpunk") {
-      localStorage.setItem("timer-theme", "dark");
-      applyTheme("dark");
+      themeManager.apply("dark");
+      updateThemeToggleIcon();
       localStorage.setItem("timer-font", "pixel");
       applyFont("pixel");
     }
