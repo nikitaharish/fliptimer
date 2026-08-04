@@ -2,46 +2,63 @@
   color-scheme: light dark;
   --size-scale: 1;
   --app-font: "Orbitron";
-  --bg: #f4f4f5;
-  --text: #18181b;
-  --status-text: #71717a;
+
+  /* Design tokens -------------------------------------------------------
+     Every color/shadow/border/divider value used anywhere below should
+     read one of these (or a theme override of one of these) instead of a
+     literal. Layout tokens (--flip-h/--flip-w/--flip-font/--flip-radius/
+     --size-scale/--app-font) are a separate, dimension-only system and are
+     intentionally left out of this list. */
+  --bg-primary: #f4f4f5;
+  --text-primary: #18181b;
+  --text-secondary: #71717a;
   --accent: #6366f1;
-  --flip-bg: #eaeaec;
-  --flip-text: #18181b;
-  --flip-divider: rgba(0, 0, 0, 0.14);
-  --flip-shadow: rgba(0, 0, 0, 0.18);
+  --card-bg: #eaeaec;
+  --card-text: #18181b;
+  --card-border: transparent;
+  --card-shadow: rgba(0, 0, 0, 0.18);
+  --divider: rgba(0, 0, 0, 0.14);
+  --glow-color: transparent;
+  --control-shadow: rgba(0, 0, 0, 0.3);
+  --popover-shadow: rgba(0, 0, 0, 0.35);
+
+  /* Derived tokens - alias the primitives above so most themes never need
+     to restate them; any theme can still override these directly. */
+  --surface: var(--card-bg);
+  --button-bg: var(--accent);
+  --button-hover: color-mix(in srgb, var(--text-primary) 10%, transparent);
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #18181b;
-    --text: #f4f4f5;
-    --status-text: #a1a1aa;
-    --flip-bg: #1c1c1e;
-    --flip-text: #c7c7cc;
-    --flip-divider: rgba(0, 0, 0, 0.55);
-    --flip-shadow: rgba(0, 0, 0, 0.6);
+    --bg-primary: #18181b;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --card-bg: #1c1c1e;
+    --card-text: #c7c7cc;
+    --divider: rgba(0, 0, 0, 0.55);
+    --card-shadow: rgba(0, 0, 0, 0.6);
   }
 }
 
 :root[data-theme="light"] {
-  --bg: #f4f4f5;
-  --text: #18181b;
-  --status-text: #71717a;
-  --flip-bg: #eaeaec;
-  --flip-text: #18181b;
-  --flip-divider: rgba(0, 0, 0, 0.14);
-  --flip-shadow: rgba(0, 0, 0, 0.18);
+  --bg-primary: #f4f4f5;
+  --text-primary: #18181b;
+  --text-secondary: #71717a;
+  --card-bg: #eaeaec;
+  --card-text: #18181b;
+  --divider: rgba(0, 0, 0, 0.14);
+  --card-shadow: rgba(0, 0, 0, 0.18);
 }
 
 :root[data-theme="dark"] {
-  --bg: #18181b;
-  --text: #f4f4f5;
-  --status-text: #a1a1aa;
-  --flip-bg: #1c1c1e;
-  --flip-text: #c7c7cc;
-  --flip-divider: rgba(0, 0, 0, 0.55);
-  --flip-shadow: rgba(0, 0, 0, 0.6);
+  --bg-primary: #18181b;
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --card-bg: #1c1c1e;
+  --card-text: #c7c7cc;
+  --divider: rgba(0, 0, 0, 0.55);
+  --card-shadow: rgba(0, 0, 0, 0.6);
 }
 
 :root[data-font="orbitron"] {
@@ -49,86 +66,86 @@
 }
 
 :root[data-theme="dark"][data-accent="indigo"] {
-  --bg: #15151d;
-  --flip-bg: #1b1b26;
-  --flip-text: #a5b4fc;
+  --bg-primary: #15151d;
+  --card-bg: #1b1b26;
+  --card-text: #a5b4fc;
   --accent: #6366f1;
 }
 
 :root[data-theme="dark"][data-accent="rose"] {
-  --bg: #1d1416;
-  --flip-bg: #24181b;
-  --flip-text: #fda4af;
+  --bg-primary: #1d1416;
+  --card-bg: #24181b;
+  --card-text: #fda4af;
   --accent: #f43f5e;
 }
 
 :root[data-theme="dark"][data-accent="emerald"] {
-  --bg: #111c18;
-  --flip-bg: #16241e;
-  --flip-text: #6ee7b7;
+  --bg-primary: #111c18;
+  --card-bg: #16241e;
+  --card-text: #6ee7b7;
   --accent: #10b981;
 }
 
 :root[data-theme="dark"][data-accent="amber"] {
-  --bg: #1d1810;
-  --flip-bg: #241d14;
-  --flip-text: #fcd34d;
+  --bg-primary: #1d1810;
+  --card-bg: #241d14;
+  --card-text: #fcd34d;
   --accent: #f59e0b;
 }
 
 :root[data-theme="dark"][data-accent="sky"] {
-  --bg: #101a1f;
-  --flip-bg: #152026;
-  --flip-text: #7dd3fc;
+  --bg-primary: #101a1f;
+  --card-bg: #152026;
+  --card-text: #7dd3fc;
   --accent: #0ea5e9;
 }
 
 :root[data-theme="dark"][data-accent="violet"] {
-  --bg: #181422;
-  --flip-bg: #1e192b;
-  --flip-text: #c4b5fd;
+  --bg-primary: #181422;
+  --card-bg: #1e192b;
+  --card-text: #c4b5fd;
   --accent: #8b5cf6;
 }
 
 :root[data-theme="light"][data-accent="indigo"] {
-  --bg: #eef0ff;
-  --flip-bg: #e0e3fc;
-  --flip-text: #4338ca;
+  --bg-primary: #eef0ff;
+  --card-bg: #e0e3fc;
+  --card-text: #4338ca;
   --accent: #6366f1;
 }
 
 :root[data-theme="light"][data-accent="rose"] {
-  --bg: #fff0f1;
-  --flip-bg: #ffe1e4;
-  --flip-text: #be123c;
+  --bg-primary: #fff0f1;
+  --card-bg: #ffe1e4;
+  --card-text: #be123c;
   --accent: #f43f5e;
 }
 
 :root[data-theme="light"][data-accent="emerald"] {
-  --bg: #ecfdf5;
-  --flip-bg: #d3f8e7;
-  --flip-text: #047857;
+  --bg-primary: #ecfdf5;
+  --card-bg: #d3f8e7;
+  --card-text: #047857;
   --accent: #10b981;
 }
 
 :root[data-theme="light"][data-accent="amber"] {
-  --bg: #fffaeb;
-  --flip-bg: #fef0c7;
-  --flip-text: #b45309;
+  --bg-primary: #fffaeb;
+  --card-bg: #fef0c7;
+  --card-text: #b45309;
   --accent: #f59e0b;
 }
 
 :root[data-theme="light"][data-accent="sky"] {
-  --bg: #eff9ff;
-  --flip-bg: #ddf3fe;
-  --flip-text: #0369a1;
+  --bg-primary: #eff9ff;
+  --card-bg: #ddf3fe;
+  --card-text: #0369a1;
   --accent: #0ea5e9;
 }
 
 :root[data-theme="light"][data-accent="violet"] {
-  --bg: #f6f3ff;
-  --flip-bg: #ece6fe;
-  --flip-text: #6d28d9;
+  --bg-primary: #f6f3ff;
+  --card-bg: #ece6fe;
+  --card-text: #6d28d9;
   --accent: #8b5cf6;
 }
 
@@ -141,49 +158,56 @@
 }
 
 :root[data-theme="dark"][data-accent="cyberpunk"] {
-  --bg: #0a0014;
-  --flip-bg: #14001f;
-  --flip-text: #00fff2;
+  --bg-primary: #0a0014;
+  --card-bg: #14001f;
+  --card-text: #00fff2;
   --accent: #ff00c8;
-  --flip-divider: rgba(255, 0, 200, 0.5);
+  --divider: rgba(255, 0, 200, 0.5);
+  --glow-color: rgba(0, 255, 242, 0.05);
 }
 
 :root[data-theme="light"][data-accent="cyberpunk"] {
-  --bg: #0a0014;
-  --flip-bg: #14001f;
-  --flip-text: #00fff2;
+  --bg-primary: #0a0014;
+  --card-bg: #14001f;
+  --card-text: #00fff2;
   --accent: #ff00c8;
-  --flip-divider: rgba(255, 0, 200, 0.5);
-  --text: #f4f4f5;
-  --status-text: #b48ccf;
+  --divider: rgba(255, 0, 200, 0.5);
+  --glow-color: rgba(0, 255, 242, 0.05);
+  --text-primary: #f4f4f5;
+  --text-secondary: #b48ccf;
 }
 
 :root[data-theme="dark"][data-accent="mono"] {
-  --bg: #121214;
-  --flip-bg: #2c2c31;
-  --flip-text: #ffffff;
+  --bg-primary: #121214;
+  --card-bg: #2c2c31;
+  --card-text: #ffffff;
   --accent: #e4e4e7;
-  --flip-divider: #050505;
-  --flip-shadow: rgba(0, 0, 0, 0.55);
-  --text: #f4f4f5;
-  --status-text: #a1a1aa;
+  --divider: #050505;
+  --card-shadow: rgba(0, 0, 0, 0.55);
+  --glow-color: rgba(255, 255, 255, 0.3);
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
 }
 
 :root[data-theme="light"][data-accent="mono"] {
-  --bg: #e9e9ea;
-  --flip-bg: #2c2c31;
-  --flip-text: #ffffff;
+  --bg-primary: #e9e9ea;
+  --card-bg: #2c2c31;
+  --card-text: #ffffff;
   --accent: #18181b;
-  --flip-divider: #050505;
-  --flip-shadow: rgba(0, 0, 0, 0.35);
-  --text: #18181b;
-  --status-text: #52525b;
+  --divider: #050505;
+  --card-shadow: rgba(0, 0, 0, 0.35);
+  --glow-color: rgba(255, 255, 255, 0.3);
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
 }
 
 :root[data-accent="mono"] .flip-digit {
-  box-shadow: 0 12px 24px var(--flip-shadow);
+  box-shadow: 0 12px 24px var(--card-shadow);
 }
 
+/* Mono's beveled card look is a bespoke multi-stop gradient effect, not a
+   flat token-driven fill - its exact highlight/shadow stops are left as
+   literals here rather than forced into the generic token set. */
 :root[data-accent="mono"] .flip-static.top,
 :root[data-accent="mono"] .flip-leaf.front {
   background:
@@ -216,10 +240,10 @@
   border-radius: 2px;
   transform: translate(-50%, -50%);
   box-shadow:
-    calc(-1 * var(--flip-w) / 2) 0 0 0 #050505,
-    calc(-1 * var(--flip-w) / 2) 0 0 1px rgba(255, 255, 255, 0.3),
-    calc(var(--flip-w) / 2) 0 0 0 #050505,
-    calc(var(--flip-w) / 2) 0 0 1px rgba(255, 255, 255, 0.3);
+    calc(-1 * var(--flip-w) / 2) 0 0 0 var(--divider),
+    calc(-1 * var(--flip-w) / 2) 0 0 1px var(--glow-color),
+    calc(var(--flip-w) / 2) 0 0 0 var(--divider),
+    calc(var(--flip-w) / 2) 0 0 1px var(--glow-color);
   z-index: 11;
   pointer-events: none;
 }
@@ -229,7 +253,7 @@
 }
 
 :root[data-theme="light"][data-accent="mono"] .flip-sep {
-  color: #050505;
+  color: var(--divider);
 }
 
 * {
@@ -240,7 +264,7 @@ body {
   margin: 0;
   min-height: 100vh;
   font-family: var(--app-font), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background: var(--bg);
+  background: var(--bg-primary);
   transition: background 0.2s;
 }
 
@@ -248,13 +272,13 @@ body {
   background:
     repeating-linear-gradient(
       0deg,
-      rgba(0, 255, 242, 0.05) 0px,
-      rgba(0, 255, 242, 0.05) 1px,
+      var(--glow-color) 0px,
+      var(--glow-color) 1px,
       transparent 1px,
       transparent 3px
     ),
     url("cyberpunk-bg.svg") bottom center / cover no-repeat,
-    var(--bg);
+    var(--bg-primary);
 }
 
 :root[data-accent="cyberpunk"] .flip-clock {
@@ -262,16 +286,16 @@ body {
 }
 
 :root[data-accent="cyberpunk"] .flip-digit {
-  box-shadow: 0 0 12px var(--flip-text), 0 0 28px var(--accent);
+  box-shadow: 0 0 12px var(--card-text), 0 0 28px var(--accent);
 }
 
 :root[data-accent="cyberpunk"] .flip-static .num,
 :root[data-accent="cyberpunk"] .flip-leaf .num {
-  text-shadow: 0 0 6px var(--flip-text), 0 0 16px var(--flip-text);
+  text-shadow: 0 0 6px var(--card-text), 0 0 16px var(--card-text);
 }
 
 :root[data-accent="cyberpunk"] .flip-sep {
-  text-shadow: 0 0 6px var(--flip-text), 0 0 16px var(--flip-text);
+  text-shadow: 0 0 6px var(--card-text), 0 0 16px var(--card-text);
 }
 
 :root[data-accent="cyberpunk"] .icon-btn {
@@ -322,13 +346,13 @@ body {
 }
 
 .theme-toggle:hover {
-  background: color-mix(in srgb, var(--text) 10%, transparent);
+  background: var(--button-hover);
 }
 
 .font-toggle {
   border: none;
   background: transparent;
-  color: var(--text);
+  color: var(--text-primary);
   font-family: var(--app-font), sans-serif;
   font-size: 1.1rem;
   line-height: 1;
@@ -340,7 +364,7 @@ body {
 }
 
 .font-toggle:hover {
-  background: color-mix(in srgb, var(--text) 10%, transparent);
+  background: var(--button-hover);
 }
 
 .color-dropdown {
@@ -350,10 +374,10 @@ body {
   right: 1.2rem;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.6rem;
-  background: var(--flip-bg);
+  background: var(--surface);
   padding: 0.7rem;
   border-radius: 12px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 8px 24px var(--popover-shadow);
   z-index: 25;
 }
 
@@ -361,6 +385,10 @@ body {
   display: grid;
 }
 
+/* Swatch preview colors intentionally stay as literals: each dot must
+   preview a theme that ISN'T the currently-active one, so it can't read
+   that theme's live custom properties (those only exist while the theme
+   itself is applied to :root). */
 .color-swatch {
   width: 1.4rem;
   height: 1.4rem;
@@ -405,8 +433,8 @@ body {
 }
 
 .color-swatch.active {
-  border-color: var(--bg);
-  box-shadow: 0 0 0 2px var(--text);
+  border-color: var(--bg-primary);
+  box-shadow: 0 0 0 2px var(--text-primary);
 }
 
 .duration-slider {
@@ -419,7 +447,7 @@ body {
   width: 100%;
   height: 6px;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--text) 15%, transparent);
+  background: color-mix(in srgb, var(--text-primary) 15%, transparent);
   outline: none;
   cursor: pointer;
 }
@@ -431,8 +459,8 @@ body {
   height: 22px;
   border-radius: 50%;
   background: var(--accent);
-  border: 3px solid var(--bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 2px 6px var(--control-shadow);
   cursor: pointer;
 }
 
@@ -441,8 +469,8 @@ body {
   height: 22px;
   border-radius: 50%;
   background: var(--accent);
-  border: 3px solid var(--bg);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  border: 3px solid var(--bg-primary);
+  box-shadow: 0 2px 6px var(--control-shadow);
   cursor: pointer;
 }
 
@@ -472,7 +500,7 @@ body {
 }
 
 .size-icon {
-  color: var(--status-text);
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -492,7 +520,7 @@ body {
   margin-top: 0.6rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--status-text);
+  color: var(--text-secondary);
 }
 
 .slider-ticks span {
@@ -523,7 +551,7 @@ body {
 }
 
 .flip-sep {
-  color: var(--flip-text);
+  color: var(--card-text);
   font-size: var(--flip-font);
   font-weight: 800;
   line-height: var(--flip-h);
@@ -536,8 +564,9 @@ body {
   width: var(--flip-w);
   height: var(--flip-h);
   perspective: calc(var(--flip-h) * 4);
+  border: 0 solid var(--card-border);
   border-radius: var(--flip-radius);
-  box-shadow: 0 6px 16px var(--flip-shadow);
+  box-shadow: 0 6px 16px var(--card-shadow);
   transition: width 0.15s ease, height 0.15s ease, border-radius 0.15s ease;
 }
 
@@ -548,7 +577,7 @@ body {
   right: 0;
   height: calc(var(--flip-h) / 2);
   overflow: hidden;
-  background: var(--flip-bg);
+  background: var(--card-bg);
   transition: height 0.15s ease;
 }
 
@@ -563,7 +592,7 @@ body {
   font-weight: 800;
   font-variant-numeric: tabular-nums;
   text-align: center;
-  color: var(--flip-text);
+  color: var(--card-text);
   transition: height 0.15s ease, line-height 0.15s ease, font-size 0.15s ease;
 }
 
@@ -596,7 +625,7 @@ body {
   right: 0;
   top: 50%;
   height: clamp(2px, 0.25vw, 4px);
-  background: var(--flip-divider);
+  background: var(--divider);
   transform: translateY(-1px);
   z-index: 10;
   pointer-events: none;
@@ -669,7 +698,7 @@ body {
   padding: 0;
   border: none;
   border-radius: 50%;
-  background: var(--accent);
+  background: var(--button-bg);
   color: #fff;
   cursor: pointer;
   transition: opacity 0.15s, transform 0.1s;
