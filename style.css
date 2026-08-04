@@ -22,6 +22,15 @@
   --control-shadow: rgba(0, 0, 0, 0.3);
   --popover-shadow: rgba(0, 0, 0, 0.35);
 
+  /* Generic UI chrome (popovers, dropdowns) - deliberately its own token
+     rather than an alias of --card-bg. Accents like mono/cyberpunk override
+     --card-bg to force a dark flip-tile look regardless of data-theme; if
+     UI chrome aliased that same token it would go dark along with the
+     tiles, even while data-theme (and the theme picker's own checkmark)
+     still correctly says "light". --ui-surface only varies with data-theme,
+     never with data-accent, so chrome always matches what the picker shows. */
+  --ui-surface: var(--card-bg);
+
   /* Derived tokens - alias the primitives above so most themes never need
      to restate them; any theme can still override these directly. */
   --surface: var(--card-bg);
@@ -38,6 +47,7 @@
     --card-text: #c7c7cc;
     --divider: rgba(0, 0, 0, 0.55);
     --card-shadow: rgba(0, 0, 0, 0.6);
+    --ui-surface: #1c1c1e;
   }
 }
 
@@ -49,6 +59,7 @@
   --card-text: #18181b;
   --divider: rgba(0, 0, 0, 0.14);
   --card-shadow: rgba(0, 0, 0, 0.18);
+  --ui-surface: #eaeaec;
 }
 
 :root[data-theme="dark"] {
@@ -59,6 +70,7 @@
   --card-text: #c7c7cc;
   --divider: rgba(0, 0, 0, 0.55);
   --card-shadow: rgba(0, 0, 0, 0.6);
+  --ui-surface: #1c1c1e;
 }
 
 /* Minimal Black - the default production theme. Pure black page, soft
@@ -78,6 +90,7 @@
   --card-text: #ffffff;
   --divider: rgba(0, 0, 0, 0.55);
   --card-shadow: rgba(255, 255, 255, 0.06);
+  --ui-surface: #1c1c1e;
 }
 
 /* The accent is a near-white here, so the icon-btn's default white icon
@@ -400,7 +413,7 @@ body {
   flex-direction: column;
   gap: 0.2rem;
   min-width: 11rem;
-  background: var(--surface);
+  background: var(--ui-surface);
   padding: 0.4rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px var(--popover-shadow);
@@ -471,7 +484,7 @@ body {
   right: 1.2rem;
   grid-template-columns: repeat(3, 1fr);
   gap: 0.6rem;
-  background: var(--surface);
+  background: var(--ui-surface);
   padding: 0.7rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px var(--popover-shadow);
