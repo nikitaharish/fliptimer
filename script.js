@@ -1,4 +1,5 @@
 import { FlipDigit } from "./js/flip-digit.js?v=2";
+import { TimerController } from "./js/timer-controller.js?v=1";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
@@ -32,6 +33,11 @@ const flipDigits = {
   sTens: new FlipDigit(flipClock.querySelector('[data-role="sTens"]')),
   sOnes: new FlipDigit(flipClock.querySelector('[data-role="sOnes"]')),
 };
+
+const timerController = new TimerController({
+  digits: flipDigits,
+  onComplete: () => onTimerComplete(),
+});
 
 const confettiCanvas = document.getElementById("confettiCanvas");
 const confettiCtx = confettiCanvas.getContext("2d");
@@ -229,11 +235,6 @@ function launchCompletionEffect() {
   }
 }
 
-let totalSeconds = 0;
-let remainingSeconds = 0;
-let endTime = null;
-let intervalId = null;
-
 if ("Notification" in window && Notification.permission === "default") {
   Notification.requestPermission();
 }
@@ -313,22 +314,8 @@ function setPlayPauseIcon(running) {
   playPauseBtn.setAttribute("title", label);
 }
 
-function updateDisplay() {
-  const m = Math.floor(remainingSeconds / 60).toString().padStart(2, "0");
-  const s = Math.floor(remainingSeconds % 60).toString().padStart(2, "0");
-  flipDigits.mTens.flipTo(m[0]);
-  flipDigits.mOnes.flipTo(m[1]);
-  flipDigits.sTens.flipTo(s[0]);
-  flipDigits.sOnes.flipTo(s[1]);
-}
-
 function selectPreset(minutes) {
-  clearInterval(intervalId);
-  intervalId = null;
-  totalSeconds = minutes * 60;
-  remainingSeconds = totalSeconds;
-  endTime = null;
-  updateDisplay();
+  timerController.setDuration(minutes * 60);
   sliderTicks.forEach((tick) => {
     tick.classList.toggle("active", Number(tick.dataset.minutes) === minutes);
   });
@@ -337,33 +324,20 @@ function selectPreset(minutes) {
   resetBtn.disabled = false;
 }
 
-function tick() {
-  remainingSeconds = Math.max(0, Math.round((endTime - Date.now()) / 1000));
-  updateDisplay();
-  if (remainingSeconds <= 0) {
-    clearInterval(intervalId);
-    intervalId = null;
-    onTimerComplete();
-  }
-}
-
 function startTimer() {
-  if (remainingSeconds <= 0) return;
-  endTime = Date.now() + remainingSeconds * 1000;
-  intervalId = setInterval(tick, 1000);
+  if (!timerController.start()) return;
   setPlayPauseIcon(true);
   durationSlider.disabled = true;
 }
 
 function pauseTimer() {
-  clearInterval(intervalId);
-  intervalId = null;
+  timerController.pause();
   setPlayPauseIcon(false);
   durationSlider.disabled = false;
 }
 
 function togglePlayPause() {
-  if (intervalId) {
+  if (timerController.isRunning) {
     pauseTimer();
   } else {
     startTimer();
@@ -371,12 +345,8 @@ function togglePlayPause() {
 }
 
 function resetTimer() {
-  clearInterval(intervalId);
-  intervalId = null;
-  remainingSeconds = totalSeconds;
-  endTime = null;
-  updateDisplay();
-  playPauseBtn.disabled = totalSeconds === 0;
+  timerController.reset();
+  playPauseBtn.disabled = timerController.remainingSeconds === 0;
   setPlayPauseIcon(false);
   durationSlider.disabled = false;
 }
