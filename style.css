@@ -99,6 +99,72 @@
   color: #000000;
 }
 
+/* Glass - a premium, Apple-inspired frosted-glass material: a soft pastel
+   backdrop with semi-transparent, blurred panels floating above it, thin
+   bright-edge borders standing in for a highlight rather than a hard
+   outline, and gentle diffused shadows. Evokes macOS's vibrancy /
+   frosted-glass UI materials (Control Center, Big Sur+ panels). The blur
+   and border-width itself live in scoped rules below, since the shared
+   base rules (.flip-digit, .theme-picker-popover, etc.) stay untouched
+   for every other theme. */
+:root[data-theme="glass"] {
+  --bg-primary: linear-gradient(135deg, #eef2f8 0%, #dde6f2 45%, #cfd9e8 100%);
+  --text-primary: #1d1d1f;
+  --text-secondary: rgba(29, 29, 31, 0.6);
+  --accent: #0071e3;
+  --card-bg: rgba(255, 255, 255, 0.55);
+  --card-text: #1d1d1f;
+  --card-border: rgba(255, 255, 255, 0.7);
+  --card-shadow: rgba(31, 38, 135, 0.16);
+  --divider: rgba(255, 255, 255, 0.5);
+  --glow-color: rgba(255, 255, 255, 0.6);
+  --ui-surface: rgba(255, 255, 255, 0.6);
+  --popover-shadow: rgba(31, 38, 135, 0.22);
+  --control-shadow: rgba(31, 38, 135, 0.16);
+}
+
+/* Frosted blur + thin highlighted border on the flip tiles themselves -
+   the base .flip-digit/.flip-static/.flip-leaf rules stay generic (0px
+   border, no blur) so no other theme is affected. */
+:root[data-theme="glass"] .flip-digit {
+  border-width: 1px;
+  box-shadow: 0 8px 32px var(--card-shadow);
+}
+
+:root[data-theme="glass"] .flip-static,
+:root[data-theme="glass"] .flip-leaf {
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  box-shadow: inset 0 1px 0 var(--glow-color);
+  transition: height 0.15s ease, background 0.2s ease;
+}
+
+/* Same frosted treatment on the round transport buttons and the top-bar
+   icon buttons, so the "glass" material reads consistently across every
+   surface, not just the flip tiles. */
+:root[data-theme="glass"] .icon-btn {
+  backdrop-filter: blur(12px) saturate(160%);
+  -webkit-backdrop-filter: blur(12px) saturate(160%);
+  box-shadow: 0 4px 14px var(--control-shadow);
+  transition: opacity 0.15s, transform 0.1s, box-shadow 0.2s ease;
+}
+
+:root[data-theme="glass"] .font-toggle,
+:root[data-theme="glass"] .theme-toggle {
+  transition: background 0.2s ease;
+}
+
+/* Popover/dropdown get the same frosted-panel treatment as the flip tiles:
+   blurred translucent surface plus a thin bright border standing in for
+   the highlight edge real glass catches. */
+:root[data-theme="glass"] .theme-picker-popover,
+:root[data-theme="glass"] .color-dropdown {
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid var(--card-border);
+  transition: background 0.2s ease;
+}
+
 :root[data-font="orbitron"] {
   --app-font: "Orbitron";
 }

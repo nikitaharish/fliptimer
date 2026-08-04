@@ -9,6 +9,7 @@ export const THEMES = [
   { id: "minimal-black", label: "Minimal Black", bg: "#000000", card: "#1c1c1e" },
   { id: "light", label: "Light", bg: "#f4f4f5", card: "#eaeaec" },
   { id: "dark", label: "Dark", bg: "#18181b", card: "#1c1c1e" },
+  { id: "glass", label: "Glass", bg: "linear-gradient(135deg, #eef2f8 0%, #cfd9e8 100%)", card: "rgba(255, 255, 255, 0.6)" },
 ];
 
 const CHECK_ICON = `<svg class="theme-card-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M4 12l5 5L20 6"/></svg>`;
