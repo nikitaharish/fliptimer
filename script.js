@@ -1,6 +1,7 @@
 import { FlipDigit } from "./js/flip-digit.js?v=2";
 import { TimerController } from "./js/timer-controller.js?v=1";
 import { ThemeManager } from "./js/theme-manager.js?v=2";
+import { createThemePicker } from "./js/theme-picker.js?v=1";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
@@ -14,6 +15,8 @@ const fontToggle = document.getElementById("fontToggle");
 const colorSwatches = document.querySelectorAll(".color-swatch");
 const paletteToggle = document.getElementById("paletteToggle");
 const colorDropdown = document.getElementById("colorDropdown");
+const themePickerToggle = document.getElementById("themePickerToggle");
+const themePickerPopover = document.getElementById("themePickerPopover");
 
 function applySize(percent) {
   document.documentElement.style.setProperty("--size-scale", percent / 100);
@@ -253,6 +256,13 @@ themeToggle.addEventListener("click", () => {
   const next = themeManager.activeTheme === "dark" ? "light" : "dark";
   themeManager.apply(next);
   updateThemeToggleIcon();
+});
+
+createThemePicker({
+  toggleEl: themePickerToggle,
+  popoverEl: themePickerPopover,
+  themeManager,
+  onApply: updateThemeToggleIcon,
 });
 
 function applyFont(font) {
