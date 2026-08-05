@@ -21,6 +21,7 @@ export class TimerController {
   #endTime = null;
   #intervalId = null;
   #lastRenderedDigits = null;
+  #renderRetryId = null;
 
   // `digits` is an object keyed by DIGIT_ROLES, each value being anything
   // with a flipTo(nextValue) method (a FlipDigit instance in practice).
@@ -43,6 +44,8 @@ export class TimerController {
   setDuration(totalSeconds) {
     clearInterval(this.#intervalId);
     this.#intervalId = null;
+    clearTimeout(this.#renderRetryId);
+    this.#renderRetryId = null;
     this.#totalSeconds = totalSeconds;
     this.#remainingSeconds = totalSeconds;
     this.#endTime = null;
@@ -76,6 +79,8 @@ export class TimerController {
   reset() {
     clearInterval(this.#intervalId);
     this.#intervalId = null;
+    clearTimeout(this.#renderRetryId);
+    this.#renderRetryId = null;
     this.#remainingSeconds = this.#totalSeconds;
     this.#endTime = null;
     this.#render();
@@ -103,13 +108,28 @@ export class TimerController {
     const s = Math.floor(this.#remainingSeconds % 60).toString().padStart(2, "0");
     const nextDigits = [m[0], m[1], s[0], s[1]];
 
+    const rendered = this.#lastRenderedDigits ? [...this.#lastRenderedDigits] : [null, null, null, null];
+    let pending = false;
+
     nextDigits.forEach((value, i) => {
-      const changed = !this.#lastRenderedDigits || this.#lastRenderedDigits[i] !== value;
-      if (changed) {
-        this.#digits[DIGIT_ROLES[i]].flipTo(value);
+      if (rendered[i] === value) return;
+      // flipTo() rejects the request if that digit is still mid-animation
+      // from a previous render (e.g. several duration changes landing
+      // faster than one flip can finish, such as dragging the duration
+      // slider). Only mark it as rendered when the flip actually took -
+      // otherwise this digit is now stale versus nextDigits and needs a
+      // retry, since nothing else will re-render it once input stops.
+      const applied = this.#digits[DIGIT_ROLES[i]].flipTo(value);
+      if (applied) {
+        rendered[i] = value;
+      } else {
+        pending = true;
       }
     });
 
-    this.#lastRenderedDigits = nextDigits;
+    this.#lastRenderedDigits = rendered;
+
+    clearTimeout(this.#renderRetryId);
+    this.#renderRetryId = pending ? setTimeout(() => this.#render(), 120) : null;
   }
 }

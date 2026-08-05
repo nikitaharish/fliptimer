@@ -102,9 +102,14 @@ export class FlipDigit {
   // interrupt) if a flip animation is already in progress - only the Idle
   // state accepts a new flip, so this is how "prevent multiple flip
   // animations running simultaneously" is enforced.
+  //
+  // Returns true if `nextValue` is (or is now becoming) the displayed
+  // value, false if the request was dropped because a flip is already in
+  // progress - callers that need this digit to eventually catch up to the
+  // real target should retry once it's idle again.
   flipTo(nextValue) {
-    if (nextValue === this.#currentValue) return;
-    if (this.#state !== FlipState.IDLE) return;
+    if (nextValue === this.#currentValue) return true;
+    if (this.#state !== FlipState.IDLE) return false;
 
     const previousValue = this.#currentValue;
     this.#nextValue = nextValue;
@@ -149,5 +154,7 @@ export class FlipDigit {
         this.#transitionTo(FlipState.IDLE);
       }, FLIP_DURATION_MS);
     }, FLIP_DURATION_MS);
+
+    return true;
   }
 }

@@ -1,5 +1,5 @@
-import { FlipDigit } from "./js/flip-digit.js?v=2";
-import { TimerController } from "./js/timer-controller.js?v=1";
+import { FlipDigit } from "./js/flip-digit.js?v=3";
+import { TimerController } from "./js/timer-controller.js?v=2";
 import { ThemeManager } from "./js/theme-manager.js?v=2";
 import { createThemePicker } from "./js/theme-picker.js?v=2";
 
@@ -321,7 +321,16 @@ colorSwatches.forEach((swatch) => {
 
 paletteToggle.addEventListener("click", (event) => {
   event.stopPropagation();
+  themePickerPopover.classList.remove("open");
   colorDropdown.classList.toggle("open");
+});
+
+// Both popovers share the same fixed top-right anchor point, so leaving
+// one open while the other opens on top of it renders as an unreadable
+// overlap. Closing this one whenever the theme picker opens keeps them
+// mutually exclusive.
+themePickerToggle.addEventListener("click", () => {
+  colorDropdown.classList.remove("open");
 });
 
 document.addEventListener("click", (event) => {
