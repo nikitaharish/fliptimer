@@ -154,11 +154,12 @@
   transition: background 0.2s ease;
 }
 
-/* Popover/dropdown get the same frosted-panel treatment as the flip tiles:
+/* Popover gets the same frosted-panel treatment as the flip tiles: a
    blurred translucent surface plus a thin bright border standing in for
-   the highlight edge real glass catches. */
-:root[data-theme="glass"] .theme-picker-popover,
-:root[data-theme="glass"] .color-dropdown {
+   the highlight edge real glass catches. The accent-swatch section
+   nested inside it inherits this same panel, so it needs no rule of its
+   own. */
+:root[data-theme="glass"] .theme-picker-popover {
   backdrop-filter: blur(24px) saturate(180%);
   -webkit-backdrop-filter: blur(24px) saturate(180%);
   border: 1px solid var(--card-border);
@@ -471,16 +472,20 @@ body {
   background: var(--button-hover);
 }
 
+/* The single combined "appearance" popover: a Theme section (rendered by
+   theme-picker.js into .theme-card-list) and an Accent color section
+   (the existing .color-swatch grid) stacked in one panel, so there is
+   only one menu and one open/close state instead of two separate
+   overlapping popovers. */
 .theme-picker-popover {
   display: none;
   position: fixed;
   top: 3.1rem;
   right: 1.2rem;
   flex-direction: column;
-  gap: 0.2rem;
-  min-width: 11rem;
+  min-width: 12rem;
   background: var(--ui-surface);
-  padding: 0.4rem;
+  padding: 0.5rem;
   border-radius: 12px;
   box-shadow: 0 8px 24px var(--popover-shadow);
   z-index: 25;
@@ -488,6 +493,28 @@ body {
 
 .theme-picker-popover.open {
   display: flex;
+}
+
+.popover-section-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+  padding: 0.35rem 0.55rem 0.15rem;
+}
+
+.popover-divider {
+  height: 1px;
+  margin: 0.4rem 0.2rem;
+  background: var(--divider);
+  flex-shrink: 0;
+}
+
+.theme-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
 }
 
 .theme-card {
@@ -543,22 +570,11 @@ body {
   color: var(--accent);
 }
 
-.color-dropdown {
-  display: none;
-  position: fixed;
-  top: 3.1rem;
-  right: 1.2rem;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.6rem;
-  background: var(--ui-surface);
-  padding: 0.7rem;
-  border-radius: 12px;
-  box-shadow: 0 8px 24px var(--popover-shadow);
-  z-index: 25;
-}
-
-.color-dropdown.open {
+.accent-swatch-grid {
   display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.55rem;
+  padding: 0.2rem 0.4rem 0.3rem;
 }
 
 /* Swatch preview colors intentionally stay as literals: each dot must

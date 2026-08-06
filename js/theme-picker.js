@@ -14,9 +14,14 @@ export const THEMES = [
 
 const CHECK_ICON = `<svg class="theme-card-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M4 12l5 5L20 6"/></svg>`;
 
-export function createThemePicker({ toggleEl, popoverEl, themeManager, themes = THEMES, onApply }) {
+// `popoverEl` owns the open/close state and the outside-click boundary -
+// it may contain other sections (e.g. an accent color picker) alongside
+// the theme cards. `listEl` (defaults to popoverEl for a standalone
+// picker) is the narrower container that actually gets rebuilt on every
+// render, so re-rendering the card list never wipes out sibling sections.
+export function createThemePicker({ toggleEl, popoverEl, listEl = popoverEl, themeManager, themes = THEMES, onApply }) {
   function render() {
-    popoverEl.innerHTML = "";
+    listEl.innerHTML = "";
     themes.forEach((theme) => {
       const isActive = themeManager.activeTheme === theme.id;
       const card = document.createElement("button");
@@ -38,7 +43,7 @@ export function createThemePicker({ toggleEl, popoverEl, themeManager, themes = 
         onApply?.(theme.id);
       });
 
-      popoverEl.appendChild(card);
+      listEl.appendChild(card);
     });
   }
 

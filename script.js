@@ -1,7 +1,7 @@
 import { FlipDigit } from "./js/flip-digit.js?v=3";
 import { TimerController } from "./js/timer-controller.js?v=2";
 import { ThemeManager } from "./js/theme-manager.js?v=2";
-import { createThemePicker } from "./js/theme-picker.js?v=2";
+import { createThemePicker } from "./js/theme-picker.js?v=3";
 
 const PRESETS = [1, 5, 10, 25, 30];
 const durationSlider = document.getElementById("durationSlider");
@@ -13,10 +13,9 @@ const resetBtn = document.getElementById("resetBtn");
 const themeToggle = document.getElementById("themeToggle");
 const fontToggle = document.getElementById("fontToggle");
 const colorSwatches = document.querySelectorAll(".color-swatch");
-const paletteToggle = document.getElementById("paletteToggle");
-const colorDropdown = document.getElementById("colorDropdown");
 const themePickerToggle = document.getElementById("themePickerToggle");
 const themePickerPopover = document.getElementById("themePickerPopover");
+const themeCardList = document.getElementById("themeCardList");
 
 function applySize(percent) {
   document.documentElement.style.setProperty("--size-scale", percent / 100);
@@ -267,6 +266,7 @@ const FORCING_ACCENTS = ["cyberpunk", "mono"];
 createThemePicker({
   toggleEl: themePickerToggle,
   popoverEl: themePickerPopover,
+  listEl: themeCardList,
   themeManager,
   onApply: () => {
     updateThemeToggleIcon();
@@ -315,28 +315,8 @@ colorSwatches.forEach((swatch) => {
       applyFont("pixel");
     }
 
-    colorDropdown.classList.remove("open");
+    themePickerPopover.classList.remove("open");
   });
-});
-
-paletteToggle.addEventListener("click", (event) => {
-  event.stopPropagation();
-  themePickerPopover.classList.remove("open");
-  colorDropdown.classList.toggle("open");
-});
-
-// Both popovers share the same fixed top-right anchor point, so leaving
-// one open while the other opens on top of it renders as an unreadable
-// overlap. Closing this one whenever the theme picker opens keeps them
-// mutually exclusive.
-themePickerToggle.addEventListener("click", () => {
-  colorDropdown.classList.remove("open");
-});
-
-document.addEventListener("click", (event) => {
-  if (!colorDropdown.contains(event.target) && event.target !== paletteToggle) {
-    colorDropdown.classList.remove("open");
-  }
 });
 
 function setPlayPauseIcon(running) {
